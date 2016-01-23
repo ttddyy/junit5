@@ -77,6 +77,19 @@ package org.junit.gen5.api.extension;
 public interface ExtensionPointRegistry {
 
 	/**
+	 * The order in which a specific {@link ExtensionPoint} is applied.
+	 *
+	 * <p>{@code FORWARD} means that registered extension points are applied
+	 * from lower to higher {@link Position#ordinal()}. {@code BACKWARD} is the other way round.</p>
+	 *
+	 * <p>{@code FORWARD} is typical for extension points before the actual test execution.
+	 *  {@code BACKWARD} for those after the test execution. There can be exceptions, though.</p>
+	 */
+	enum ApplicationOrder {
+		FORWARD, BACKWARD
+	}
+
+	/**
 	 * {@code Position} specifies the position in which a registered
 	 * {@link ExtensionPoint} is applied with regard to all other registered
 	 * extension points of the same type.
@@ -88,7 +101,7 @@ public interface ExtensionPointRegistry {
 	 * {@link #DEFAULT DEFAULT}, {@link #INSIDE_DEFAULT INSIDE_DEFAULT}, and
 	 * {@link #INNERMOST INNERMOST}.
 	 */
-	enum Position {
+	static class Position {
 
 		/**
 		 * Apply first.
@@ -97,7 +110,9 @@ public interface ExtensionPointRegistry {
 		 * otherwise, an {@link ExtensionConfigurationException} will be
 		 * thrown.
 		 */
-		OUTERMOST,
+		public static Position OUTERMOST = new Position(1);
+
+		public static Position FIRST = OUTERMOST;
 
 		/**
 		 * Apply after {@link #OUTERMOST} but before {@link #DEFAULT},
@@ -106,17 +121,32 @@ public interface ExtensionPointRegistry {
 		 * <p>Multiple extensions can be assigned this position; however,
 		 * the ordering among such extensions is undefined.
 		 */
-		OUTSIDE_DEFAULT,
+		public static Position OUTSIDE_DEFAULT = new Position(2);
 
-		// TODO Document DEFAULT position.
-		DEFAULT,
+		/**
+		 * Use the position derived from the order of registration using {@link ExtendWith}
+		 * in the source code. That means than an {@link ExtensionPoint} registered above or in
+		 * a superclass comes before one that is registered below.
+		 */
+		public static Position DEFAULT = new Position(3);
 
 		// TODO Document INSIDE_DEFAULT position.
-		INSIDE_DEFAULT,
+		public static Position INSIDE_DEFAULT = new Position(4);
 
 		// TODO Document INNERMOST position.
-		INNERMOST;
+		public static Position INNERMOST = new Position(5);
 
+		public static Position LAST = INNERMOST;
+
+		private final int ordinalValue;
+
+		Position(int ordinalValue) {
+			this.ordinalValue = ordinalValue;
+		}
+
+		public int ordinal() {
+			return ordinalValue;
+		}
 	}
 
 	/**
