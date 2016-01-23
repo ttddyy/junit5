@@ -10,6 +10,8 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.*;
+
 /**
  * {@code ExceptionHandlerExtensionPoint} defines the API for {@link Extension Extensions}
  * that wish to <em>react to thrown exceptions</em> in tests.
@@ -23,6 +25,8 @@ package org.junit.gen5.api.extension;
  */
 @FunctionalInterface
 public interface ExceptionHandlerExtensionPoint extends ExtensionPoint {
+
+	ExtensionPointRegistry.Position[] ALLOWED_POSITIONS = { FIRST, DEFAULT, LAST };
 
 	/**
 	 * React to a {@link Throwable throwable} which has been thrown by a test method.

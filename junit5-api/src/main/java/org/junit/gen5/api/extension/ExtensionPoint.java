@@ -10,6 +10,10 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.DEFAULT;
+
+import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
+
 /**
  * Super interface for all extension points.
  *
@@ -30,4 +34,12 @@ package org.junit.gen5.api.extension;
  * @see ExtensionRegistrar
  */
 public interface ExtensionPoint extends Extension {
+
+	/**
+	 * The set of allowed values for the {@link Position} when registering an {@code ExtensionPoint}
+	 * using {@link ExtensionPointRegistry#register(ExtensionPoint, Position)}.
+	 *
+	 * <p>Field is used through reflection!</p>
+	 */
+	Position[] ALLOWED_POSITIONS = { DEFAULT };
 }

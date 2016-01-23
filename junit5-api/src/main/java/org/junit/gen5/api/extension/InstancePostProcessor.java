@@ -10,6 +10,8 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.*;
+
 /**
  * {@code InstancePostProcessor} defines the API for {@link Extension
  * Extensions} that wish to <em>post-process</em> test instances.
@@ -23,6 +25,8 @@ package org.junit.gen5.api.extension;
  * @since 5.0
  */
 public interface InstancePostProcessor extends ExtensionPoint {
+
+	ExtensionPointRegistry.Position[] ALLOWED_POSITIONS = { FIRST, DEFAULT, LAST };
 
 	/**
 	 * Callback for post-processing the test instance in the supplied

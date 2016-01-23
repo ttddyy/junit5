@@ -10,6 +10,8 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.*;
+
 /**
  * {@code AfterAllExtensionPoint} defines the API for {@link Extension
  * Extensions} that wish to provide additional behavior to tests after
@@ -27,6 +29,9 @@ package org.junit.gen5.api.extension;
  */
 @FunctionalInterface
 public interface AfterAllExtensionPoint extends ExtensionPoint {
+
+	ExtensionPointRegistry.Position[] ALLOWED_POSITIONS = { OUTERMOST, OUTSIDE_DEFAULT, DEFAULT, INSIDE_DEFAULT,
+			INNERMOST };
 
 	/**
 	 * Callback that is invoked <em>after</em> all test methods have been invoked.
