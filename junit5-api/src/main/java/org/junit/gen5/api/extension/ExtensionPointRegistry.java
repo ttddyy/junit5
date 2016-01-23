@@ -10,6 +10,11 @@
 
 package org.junit.gen5.api.extension;
 
+import java.lang.reflect.Field;
+import java.util.Optional;
+
+import org.junit.gen5.commons.util.ReflectionUtils;
+
 /**
  * A registry for {@link ExtensionPoint} implementations which can be
  * populated via an {@link ExtensionRegistrar}.
@@ -103,6 +108,17 @@ public interface ExtensionPointRegistry {
 	 */
 	static class Position {
 
+		public static <T extends ExtensionPoint> Position[] getAllowedPositionsFor(Class<T> extensionPointType) {
+			Optional<Field> allowedPositionsField = ReflectionUtils.findField(extensionPointType, "ALLOWED_POSITIONS");
+
+			Position[] positions = new Position[] { Position.DEFAULT };
+			if (allowedPositionsField.isPresent()) {
+				//TODO: Check for correct type of field etc.
+				positions = (Position[]) ReflectionUtils.getFieldValue(allowedPositionsField.get(), null);
+			}
+			return positions;
+		}
+
 		/**
 		 * Apply first.
 		 *
@@ -112,7 +128,7 @@ public interface ExtensionPointRegistry {
 		 */
 		public static Position OUTERMOST = new Position(1, true);
 
-		public static Position FIRST = OUTERMOST;
+		public static Position FIRST = new Position(1, true);
 
 		/**
 		 * Apply after {@link #OUTERMOST} but before {@link #DEFAULT},
@@ -136,7 +152,7 @@ public interface ExtensionPointRegistry {
 		// TODO Document INNERMOST position.
 		public static Position INNERMOST = new Position(5, true);
 
-		public static Position LAST = INNERMOST;
+		public static Position LAST = new Position(5, true);
 
 		private final int ordinalValue;
 
