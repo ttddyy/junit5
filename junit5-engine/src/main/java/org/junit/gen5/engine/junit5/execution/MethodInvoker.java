@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
@@ -68,12 +67,11 @@ public class MethodInvoker {
 
 		try {
 			final List<MethodParameterResolver> matchingResolvers = new ArrayList<>();
-			extensionRegistry.stream(MethodParameterResolver.class,
-				ExtensionPointRegistry.ApplicationOrder.FORWARD).forEach(registeredExtensionPoint -> {
-					if (registeredExtensionPoint.getExtensionPoint().supports(parameter, methodInvocationContext,
-						extensionContext))
-						matchingResolvers.add(registeredExtensionPoint.getExtensionPoint());
-				});
+			extensionRegistry.stream(MethodParameterResolver.class).forEach(registeredExtensionPoint -> {
+				if (registeredExtensionPoint.getExtensionPoint().supports(parameter, methodInvocationContext,
+					extensionContext))
+					matchingResolvers.add(registeredExtensionPoint.getExtensionPoint());
+			});
 
 			if (matchingResolvers.size() == 0) {
 				throw new ParameterResolutionException(
